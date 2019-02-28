@@ -1,0 +1,42 @@
+{
+  "name": "electron-react",
+  "version": "0.1.0",
+  "private": true,
+  "main": "main.js",
+  "homepage": ".",
+  "dependencies": {
+    "antd": "^3.13.0",
+    "axios": "^0.18.0",
+    "babel-plugin-import": "^1.11.0",
+    "customize-cra": "^0.2.11",
+    "electron": "^4.0.1",
+    "less": "^3.9.0",
+    "nedb": "^1.8.0",
+    "qiniu-js": "^2.5.3",
+    "react": "^16.7.0",
+    "react-app-rewired": "^2.0.2",
+    "react-dom": "^16.7.0",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "2.1.3"
+  },
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "estart": "yarn build && yarn package",
+    "eject": "react-app-rewired eject",
+    "package": "electron-packager ./build 中流砥柱 --platform=win32 --arch=ia32 --icon=./build/icon.ico --out=./output --asar --app-version=0.0.1 --overwrite"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "devDependencies": {
+    "less-loader": "^4.1.0"
+  },
+  "proxy": "http://xuanshi.ninewe.com"
+}

@@ -1,0 +1,81 @@
+.App {
+  text-align: center;
+  background-image: url('./assets/app_bg.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  width: 1280px;
+  height: 800px;
+  margin: 0 auto;
+  position: relative;
+  .clear{
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+}
+
+.App-logo {
+  background-image: url('./assets/logo.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  width: 171px;
+  height: 175px;
+  margin: 0 auto;
+  position: relative;
+  top: 86px;
+}
+
+.App-header {
+  color: #FFD228;
+  font-family: PingFang-SC-Heavy;
+  font-size: 42px;
+  font-weight:800;
+  text-align: center;
+  margin: 0 auto;
+  position: relative;
+  top: 86px;
+}
+.App-body{
+  margin: 0 auto;
+  position: relative;
+  top: 86px;
+  display: flex;
+  justify-content: space-around;
+}
+a{
+  text-decoration:none;
+}
+.body-item{
+  text-align: center;
+  background: linear-gradient(to bottom, #F74043 0%,#DC2C2F 100%);
+  position: relative;
+  top: 86px;
+  width: 270px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  p{
+    margin:8px auto;
+    font-size:38px;
+    font-family:PingFang-SC-Bold;
+    font-weight:bold;
+    color:rgba(255,255,255,1);
+  }
+  img{
+    widows: 90px;
+    height: 98px;
+  }
+}
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

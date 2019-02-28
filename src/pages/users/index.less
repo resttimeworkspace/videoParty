@@ -1,0 +1,50 @@
+.users {
+    background-image: url('../../assets/child_bg.png');
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100%;
+    
+    .users_body {
+        width: 1100px;
+        margin: 30px auto;
+        display: flex;
+        flex-wrap: wrap;
+        height: 670px;
+        position: relative;
+        .users_item {
+            display: flex;
+            width: 318px;
+            flex-wrap: wrap;
+            margin: 0 24px 0 24px;
+            height: 260px;
+            .users_item_content {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+                padding: 10px;
+                background-color: #fff;
+                h3 {
+                    margin: 0;
+                    font-size: 20px;
+                    font-family: PingFang-SC-Bold;
+                    font-weight: bold;
+                    color: rgba(51, 51, 51, 1);
+                }
+                p {
+                    margin: 0;
+                    font-size: 15px;
+                    font-family: PingFang-SC-Bold;
+                    font-weight: bold;
+                    color: rgba(102, 102, 102, 1);
+                }
+            }
+        }
+        .pagination {
+            text-align: right;
+            margin: 0;
+            position: absolute;
+             bottom: -18px;
+        }
+    }
+}
