@@ -22,7 +22,9 @@ class Confirm extends Component {
     let id = sessionStorage.getItem("org");
     let uid = this.props.match.params.uid
     sessionStorage.setItem('user', JSON.stringify(this.state.user))
-    if(this.state.user.image){ // 有照片先直接跳转录制
+
+    console.log(this.state.user)
+    if(!this.state.user.image){ // 有照片先直接跳转录制
       this.props.history.push(`/${id}/recordDemo/${uid}`);
     }else{
       this.props.history.push(`/${id}/records/${uid}`);

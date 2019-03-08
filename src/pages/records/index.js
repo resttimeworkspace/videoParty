@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Button, Modal,Progress } from "antd";
+import { Button, Modal, Progress } from "antd";
 import Header from "../../components/Header";
 import request from "../../utils";
 import styles from "./index.less";
@@ -19,36 +19,39 @@ class Record extends Component {
     },
     uploadProgress: false, // 上传进度弹窗
     progress: 0
-
   };
   componentWillUnmount = () => {
-    if (recorder) {
-    //   recorder.stop();
-      stream.getTracks()[1].stop();
-      stream.getTracks()[0].stop();
-    }
+    // if (recorder) {
+    //   //   recorder.stop();
+    //   stream.getTracks()[1].stop();
+    //   stream.getTracks()[0].stop();
+    // }
+    stream && stream.stop();
   };
 
   componentDidMount = () => {
     this.getQiNiuToken();
     navigator.mediaDevices
-      .getUserMedia({ audio: true, video: { width: 1280, height: 720 } })
+      .getUserMedia({ audio: false, video: { width: 1280, height: 720 } })
       .then(mediaStream => {
         var video = document.querySelector("video");
-        stream = mediaStream;
+        stream =
+          typeof mediaStream.stop === "function"
+            ? mediaStream
+            : mediaStream.getTracks()[0];
         video.srcObject = mediaStream;
         video.onloadedmetadata = function(e) {
           video.play();
         };
-        recorder = new MediaRecorder(mediaStream, { mimeType: "video/webm" });
-        recorder.ondataavailable = function(e) {
-          chunks.push(e.data);
-        };
-        recorder.onstop = function(e) {
-          var blob = new Blob(chunks, { type: "video/webm" });
-          var videoSource = URL.createObjectURL(blob);
-        };
-        recorder.start(1000);
+        // recorder = new MediaRecorder(mediaStream, { mimeType: "video/webm" });
+        // recorder.ondataavailable = function(e) {
+        //   chunks.push(e.data);
+        // };
+        // recorder.onstop = function(e) {
+        //   var blob = new Blob(chunks, { type: "video/webm" });
+        //   var videoSource = URL.createObjectURL(blob);
+        // };
+        // recorder.start(1000);
       });
   };
   getQiNiuToken = () => {
@@ -87,9 +90,10 @@ class Record extends Component {
         let canvas = document.getElementById("canvas");
         var context = canvas.getContext("2d");
         context.drawImage(video, 0, 0, 400, 250);
-        recorder.stop();
-        stream.getTracks()[1].stop();
-        stream.getTracks()[0].stop();
+        // recorder.stop();
+        // stream.getTracks()[1].stop();
+        // stream.getTracks()[0].stop();
+        stream.stop();
 
         var iframe = document.getElementById("iframe");
         var doc = iframe.contentWindow.document;
@@ -106,36 +110,44 @@ class Record extends Component {
       },
       () => {
         navigator.mediaDevices
-          .getUserMedia({ audio: true, video: { width: 1280, height: 720 } })
+          .getUserMedia({ audio: false, video: { width: 1280, height: 720 } })
           .then(mediaStream => {
             var video = document.querySelector("video");
-            stream = mediaStream;
+            stream =
+              typeof mediaStream.stop === "function"
+                ? mediaStream
+                : mediaStream.getTracks()[0];
             video.srcObject = mediaStream;
             video.onloadedmetadata = function(e) {
               video.play();
             };
-            recorder = new MediaRecorder(mediaStream, {
-              mimeType: "video/webm"
-            });
-            recorder.ondataavailable = function(e) {
-              chunks.push(e.data);
-            };
-            recorder.start(1000);
+            // recorder = new MediaRecorder(mediaStream, {
+            //   mimeType: "video/webm"
+            // });
+            // recorder.ondataavailable = function(e) {
+            //   chunks.push(e.data);
+            // };
+            // recorder.start(1000);
           });
       }
     );
   };
   upload = () => {
     let file = dataURLtoBlob(imgFileUrl);
-    let self = this
+    let self = this;
     let { token, domain } = this.state.qiniu;
-    let history = this.props.history
-    let {id,uid} = this.props.match.params
-    var observable = qiniu.upload(file, `org/${id}/dangyuan/${uid}/avatar.png`, token, {
-      fname: "",
-      params: {},
-      mimeType: [] || null
-    });
+    let history = this.props.history;
+    let { id, uid } = this.props.match.params;
+    var observable = qiniu.upload(
+      file,
+      `org/${id}/dangyuan/${uid}/avatar.png`,
+      token,
+      {
+        fname: "",
+        params: {},
+        mimeType: [] || null
+      }
+    );
     var observer = {
       next(res) {
         // ...
@@ -143,14 +155,14 @@ class Record extends Component {
         self.setState({
           progress: res.total.percent.toFixed(),
           uploadProgress: res.total.percent.toFixed() === 100 ? false : true
-        })
+        });
       },
       error(err) {
         // ...
       },
       complete(res) {
         // ...
-        history.push(`/${id}/recordDemo/${uid}`)
+        history.push(`/${id}/recordDemo/${uid}`);
       }
     };
     var subscription = observable.subscribe(observer);
@@ -206,7 +218,7 @@ class Record extends Component {
           visible={this.state.uploadProgress}
           footer={null}
           maskClosable={false}
-          style={{textAlign:'center'}}
+          style={{ textAlign: "center" }}
         >
           <Progress type="circle" percent={Number(this.state.progress)} />
         </Modal>
