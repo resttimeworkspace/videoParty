@@ -6,6 +6,7 @@ import "./App.less";
 class App extends Component {
   clear = () => {
     localStorage.clear();
+    sessionStorage.clear();
     data_db.remove({}, { multi: true },  (err, numRemoved) => {
       alert('缓存清除！')
       this.props.history.push('/')

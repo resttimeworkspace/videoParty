@@ -24,7 +24,7 @@ class Confirm extends Component {
     sessionStorage.setItem('user', JSON.stringify(this.state.user))
 
     console.log(this.state.user)
-    if(!this.state.user.image){ // 有照片先直接跳转录制
+    if(this.state.user.image){ // 有照片先直接跳转录制
       this.props.history.push(`/${id}/recordDemo/${uid}`);
     }else{
       this.props.history.push(`/${id}/records/${uid}`);
