@@ -37,7 +37,8 @@ class Confirm extends Component {
   };
   prev = () => {
     let id = sessionStorage.getItem("org");
-    this.props.history.push(`/${id}/recordUserList`);
+    let type = this.props.match.params.type;
+    this.props.history.push(`/${id}/initialHeart/recordList/${type}`);
   };
   render() {
     let user = this.state.user || JSON.parse(sessionStorage.getItem("user"));

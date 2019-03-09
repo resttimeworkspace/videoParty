@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Button, Modal, Progress } from "antd";
+import QRCode from "qrcode.react";
 import Header from "../../components/Header";
 import request from "../../utils";
 import styles from "./index.less";
@@ -69,8 +70,30 @@ class Record extends Component {
           <div className="photo_modal">
             <Header title="照片确认" showBack={false} type="red" />
             <div className="modal_body">
-              <canvas id="canvas" width="400px" height="250px" />
-              <iframe style={{ display: "none" }} id="iframe" />
+              {/* <canvas id="canvas" width="400px" height="250px" />
+              <iframe style={{ display: "none" }} id="iframe" /> */}
+              <div className="preview">
+                <div className="preview-image">
+                  <img id="preview-image" alt="" />
+                  <span className="qr-code">
+                  <QRCode value="http://facebook.github.io/react/" size={64} />
+                  </span>
+                </div>
+                <div className="preview-info">
+                  <div className="preview-title">
+                    <img
+                      src={require("../../assets/logo.png")}
+                      width="32"
+                      alt=""
+                    />
+                    {sessionStorage.getItem("orgName")}
+                  </div>
+                  <ul className="developer">
+                    <li>技术支持：中流砥柱信息系统</li>
+                    <li>www.1921dangjian.com</li>
+                  </ul>
+                </div>
+              </div>
               <div className="btn_group">
                 <Button type="primary" onClick={this.upload}>
                   确认
@@ -87,19 +110,20 @@ class Record extends Component {
         )
       },
       () => {
-        let canvas = document.getElementById("canvas");
+        let canvas = document.createElement("canvas");
+        canvas.width = 400;
+        canvas.height = 250;
         var context = canvas.getContext("2d");
         context.drawImage(video, 0, 0, 400, 250);
+
         // recorder.stop();
         // stream.getTracks()[1].stop();
         // stream.getTracks()[0].stop();
         stream.stop();
 
-        var iframe = document.getElementById("iframe");
-        var doc = iframe.contentWindow.document;
+        var previewImage = document.getElementById("preview-image");
         var dataUrl = canvas.toDataURL("image/png"); //获取canvas对象图形的外部url
-        imgFileUrl = dataUrl;
-        doc.write(`<img src="${dataUrl}" alt=""/>`);
+        previewImage.src = dataUrl;
       }
     );
   };
@@ -138,17 +162,14 @@ class Record extends Component {
     let { token, domain } = this.state.qiniu;
     let history = this.props.history;
     let { id, uid, type } = this.props.match.params;
-    const url = +type ? `org/${id}/dangyuan/${uid}/avatar.png`: `org/${id}/team/${uid}/image.png`
-    var observable = qiniu.upload(
-      file,
-      url,
-      token,
-      {
-        fname: "",
-        params: {},
-        mimeType: [] || null
-      }
-    );
+    const url = +type
+      ? `org/${id}/dangyuan/${uid}/avatar.png`
+      : `org/${id}/team/${uid}/image.png`;
+    var observable = qiniu.upload(file, url, token, {
+      fname: "",
+      params: {},
+      mimeType: [] || null
+    });
     var observer = {
       next(res) {
         // ...
@@ -172,8 +193,9 @@ class Record extends Component {
     });
   };
   print = () => {
-    var iframe = document.getElementById("iframe");
-    iframe.contentWindow.print();
+    // var iframe = document.getElementById("iframe");
+    // iframe.contentWindow.print();
+    window.print();
   };
   render() {
     const backIcon = require("../../assets/back_icon_white.png");
