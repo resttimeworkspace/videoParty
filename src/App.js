@@ -26,7 +26,8 @@ class App extends Component {
               <p>党的征程</p>
             </div>
           </Link>
-          <Link to={`/${id}/recordUserList`}>
+          {/* <Link to={`/${id}/recordUserList`}> */}
+          <Link to={`/${id}/initialHeart`}>
             <div className="body-item">
               <img src={require("./assets/app_icon_2.png")} alt="" />
               <p>记录初心</p>

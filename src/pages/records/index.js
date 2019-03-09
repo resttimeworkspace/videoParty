@@ -137,10 +137,11 @@ class Record extends Component {
     let self = this;
     let { token, domain } = this.state.qiniu;
     let history = this.props.history;
-    let { id, uid } = this.props.match.params;
+    let { id, uid, type } = this.props.match.params;
+    const url = +type ? `org/${id}/dangyuan/${uid}/avatar.png`: `org/${id}/team/${uid}/image.png`
     var observable = qiniu.upload(
       file,
-      `org/${id}/dangyuan/${uid}/avatar.png`,
+      url,
       token,
       {
         fname: "",
@@ -162,7 +163,7 @@ class Record extends Component {
       },
       complete(res) {
         // ...
-        history.push(`/${id}/recordDemo/${uid}`);
+        history.push(`/${id}/recordDemo/${uid}/${type}`);
       }
     };
     var subscription = observable.subscribe(observer);

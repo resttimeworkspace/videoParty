@@ -98,10 +98,11 @@ class RecordDemo extends Component {
       let { token, domain } = this.state.qiniu;
       let history = this.props.history;
       let self = this;
-      let { id, uid } = this.props.match.params;
+      let { id, uid, type } = this.props.match.params;
+      const url = `org/${id}/${+type ?'dangyuan':'team'}/${uid}/video.mpg`
       var observable = qiniu.upload(
         videoSource,
-        `org/${id}/dangyuan/${uid}/video.mpg`,
+        url,
         token,
         {
           fname: "",
