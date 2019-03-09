@@ -78,7 +78,7 @@ class Record extends Component {
                   {
                     +this.props.match.params.type ?
                     <span className="qr-code">
-                      <QRCode value="http://facebook.github.io/react/" size={64} />
+                      <QRCode value="https://reactjs.org/" size={64} />
                     </span> : null
                   }
                   
@@ -189,7 +189,8 @@ class Record extends Component {
       },
       complete(res) {
         // ...
-        history.push(`/${id}/recordDemo/${uid}/${type}`);
+        const url = +type ? `/${id}/recordDemo/${uid}/${type}`:`/${id}/finish`
+        history.push(url);
       }
     };
     var subscription = observable.subscribe(observer);
@@ -206,13 +207,13 @@ class Record extends Component {
     const backIcon = require("../../assets/back_icon_white.png");
     const content = this.state.content;
     let id = sessionStorage.getItem("org");
-    let uid = this.props.match.params.uid;
+    const {uid, type} = this.props.match.params
     return (
       <React.Fragment>
         <div className="record">
           <div className="record_header">
             拍照
-            <Link to={`/${id}/confirm/${uid}`}>
+            <Link to={`/${id}/confirm/${uid}/${type}`}>
               <img src={backIcon} alt="" />
             </Link>
           </div>

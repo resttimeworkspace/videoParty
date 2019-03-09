@@ -99,7 +99,7 @@ class RecordDemo extends Component {
       let history = this.props.history;
       let self = this;
       let { id, uid, type } = this.props.match.params;
-      const url = `org/${id}/${+type ?'dangyuan':'team'}/${uid}/video.mpg`
+      const url = `org/${id}/dangyuan/${uid}/video.mpg`
       var observable = qiniu.upload(
         videoSource,
         url,
@@ -200,14 +200,14 @@ class RecordDemo extends Component {
   render() {
     const backIcon = require("../../assets/back_icon_white.png");
     const content = this.state.content;
-    let { id, uid } = this.props.match.params;
+    let { id, uid, type } = this.props.match.params;
     let { videoState } = this.state;
     return (
       <React.Fragment>
         <div className="record">
           <div className="record_header">
             录制
-            <Link to={`/${id}/confirm/${uid}`}>
+            <Link to={`/${id}/confirm/${uid}/${type}`}>
               <img src={backIcon} alt="" />
             </Link>
           </div>
