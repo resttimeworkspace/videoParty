@@ -71,7 +71,7 @@ class Confirm extends Component {
             ) : (
               <dl className="org-welcome">
                 <dt>热烈欢迎</dt>
-                <dd>{orgName}</dd>
+                <dd>{user.name}</dd>
                 <dd>各位领导</dd>
               </dl>
             )}

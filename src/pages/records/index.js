@@ -75,9 +75,13 @@ class Record extends Component {
               <div className="preview">
                 <div className="preview-image">
                   <img id="preview-image" alt="" />
-                  <span className="qr-code">
-                  <QRCode value="http://facebook.github.io/react/" size={64} />
-                  </span>
+                  {
+                    +this.props.match.params.type ?
+                    <span className="qr-code">
+                      <QRCode value="http://facebook.github.io/react/" size={64} />
+                    </span> : null
+                  }
+                  
                 </div>
                 <div className="preview-info">
                   <div className="preview-title">
@@ -124,6 +128,7 @@ class Record extends Component {
         var previewImage = document.getElementById("preview-image");
         var dataUrl = canvas.toDataURL("image/png"); //获取canvas对象图形的外部url
         previewImage.src = dataUrl;
+        imgFileUrl = dataUrl;
       }
     );
   };
