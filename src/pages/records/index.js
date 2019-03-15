@@ -64,6 +64,7 @@ class Record extends Component {
   };
   shot = () => {
     var video = document.getElementById("video");
+    let user = JSON.parse(sessionStorage.getItem('user'))
     this.setState(
       {
         content: (
@@ -78,7 +79,7 @@ class Record extends Component {
                   {
                     +this.props.match.params.type ?
                     <span className="qr-code">
-                      <QRCode value="https://reactjs.org/" size={64} />
+                      <QRCode value={`http://xsfxy.ninewe.com/?id=${user.project_id}&uid=${user.id}`} size={60} />
                     </span> : null
                   }
                   
@@ -87,14 +88,14 @@ class Record extends Component {
                   <div className="preview-title">
                     <img
                       src={require("../../assets/logo.png")}
-                      width="32"
+                      width="20"
                       alt=""
                     />
                     {sessionStorage.getItem("orgName")}
                   </div>
                   <ul className="developer">
-                    <li>技术支持：中流砥柱信息系统</li>
-                    <li>www.1921dangjian.com</li>
+                    <li>技术支持：中流砥柱信息系统  </li>
+                    <li>www.1921dangjian.cn</li>
                   </ul>
                 </div>
               </div>
@@ -115,10 +116,10 @@ class Record extends Component {
       },
       () => {
         let canvas = document.createElement("canvas");
-        canvas.width = 400;
-        canvas.height = 250;
+        canvas.width = 1280;
+        canvas.height = 720;
         var context = canvas.getContext("2d");
-        context.drawImage(video, 0, 0, 400, 250);
+        context.drawImage(video, 0,0 ,1280,720);
 
         // recorder.stop();
         // stream.getTracks()[1].stop();
@@ -189,8 +190,8 @@ class Record extends Component {
       },
       complete(res) {
         // ...
-        const url = +type ? `/${id}/recordDemo/${uid}/${type}`:`/${id}/finish`
-        history.push(url);
+        // const url = +type ? `/${id}/recordDemo/${uid}/${type}`:`/${id}/finish`
+        history.push(`/${id}/recordDemo/${uid}/${type}`);
       }
     };
     var subscription = observable.subscribe(observer);

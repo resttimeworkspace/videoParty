@@ -14,25 +14,30 @@ class ChooseORG extends Component {
     if (org) {
       this.props.history.push(`/${org}`);
     } else {
-      try {
-        data_db.find({}, (err, count) => {
-          if (count.length > 0) {
-            this.props.history.push(`/${count[count.length - 1].id}`);
-          } else {
-            request.get("/api/org").then(res => {
-              this.setState({
-                list: res.data
-              });
-            });
-          }
+      request.get("/api/org").then(res => {
+        this.setState({
+          list: res.data
         });
-      } catch {
-        request.get("/api/org").then(res => {
-          this.setState({
-            list: res.data
-          });
-        });
-      }
+      });
+      // try {
+      //   data_db.find({}, (err, count) => {
+      //     if (count.length > 0) {
+      //       this.props.history.push(`/${count[count.length - 1].id}`);
+      //     } else {
+      //       request.get("/api/org").then(res => {
+      //         this.setState({
+      //           list: res.data
+      //         });
+      //       });
+      //     }
+      //   });
+      // } catch {
+      //   request.get("/api/org").then(res => {
+      //     this.setState({
+      //       list: res.data
+      //     });
+      //   });
+      // }
     }
   };
   saveOrg = e => () => {

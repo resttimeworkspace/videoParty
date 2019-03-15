@@ -99,7 +99,8 @@ class RecordDemo extends Component {
       let history = this.props.history;
       let self = this;
       let { id, uid, type } = this.props.match.params;
-      const url = `org/${id}/dangyuan/${uid}/video.mpg`
+      let typeName = type == 1 ? 'dangyuan' : 'team'
+      const url = `org/${id}/${typeName}/${uid}/video.webm`
       var observable = qiniu.upload(
         videoSource,
         url,
