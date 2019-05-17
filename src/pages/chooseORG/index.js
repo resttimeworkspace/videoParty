@@ -43,6 +43,7 @@ class ChooseORG extends Component {
   saveOrg = e => () => {
     localStorage.setItem("org", e.id);
     sessionStorage.setItem("org", e.id);
+    localStorage.setItem("orgName", e.name);
     sessionStorage.setItem("orgName", e.name);
     data_db.insert(e, function(err, new_doc) {
       console.log(err, new_doc);

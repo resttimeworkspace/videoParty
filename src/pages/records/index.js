@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button, Modal, Progress } from "antd";
 import QRCode from "qrcode.react";
 import Header from "../../components/Header";
-import request from "../../utils";
+import request, { version } from "../../utils";
 import styles from "./index.less";
 import * as qiniu from "qiniu-js";
 
@@ -19,7 +19,8 @@ class Record extends Component {
       token: ""
     },
     uploadProgress: false, // 上传进度弹窗
-    progress: 0
+    progress: 0,
+    videoMode: 0 // 摄像头准备状态
   };
   componentWillUnmount = () => {
     // if (recorder) {
@@ -32,6 +33,7 @@ class Record extends Component {
 
   componentDidMount = () => {
     this.getQiNiuToken();
+    const self = this
     navigator.mediaDevices
       .getUserMedia({ audio: false, video: { width: 1280, height: 720 } })
       .then(mediaStream => {
@@ -41,8 +43,11 @@ class Record extends Component {
             ? mediaStream
             : mediaStream.getTracks()[0];
         video.srcObject = mediaStream;
-        video.onloadedmetadata = function(e) {
+        video.onloadedmetadata = function (e) {
           video.play();
+          self.setState({
+            videoMode: 1
+          })
         };
         // recorder = new MediaRecorder(mediaStream, { mimeType: "video/webm" });
         // recorder.ondataavailable = function(e) {
@@ -64,7 +69,7 @@ class Record extends Component {
   };
   shot = () => {
     var video = document.getElementById("video");
-    let user = JSON.parse(sessionStorage.getItem('user'))
+    let user = JSON.parse(sessionStorage.getItem('user') || localStorage.getItem("user"))
     this.setState(
       {
         content: (
@@ -76,13 +81,6 @@ class Record extends Component {
               <div className="preview">
                 <div className="preview-image">
                   <img id="preview-image" alt="" />
-                  {
-                    +this.props.match.params.type ?
-                    <span className="qr-code">
-                      <QRCode value={`http://xsfxy.ninewe.com/?id=${user.project_id}&uid=${user.id}`} size={60} />
-                    </span> : null
-                  }
-                  
                 </div>
                 <div className="preview-info">
                   <div className="preview-title">
@@ -91,12 +89,19 @@ class Record extends Component {
                       width="20"
                       alt=""
                     />
-                    {sessionStorage.getItem("orgName")}
+                    {sessionStorage.getItem("orgName") || localStorage.getItem("orgName")}
                   </div>
-                  <ul className="developer">
-                    <li>技术支持：中流砥柱信息系统  </li>
-                    <li>www.1921dangjian.cn</li>
-                  </ul>
+                  <div style={{ display: 'flex' }}>
+                    {
+                      version ? <ul className="developer">
+                        <li>技术支持：中流砥柱信息系统  </li>
+                        <li>www.1921dangjian.cn</li>
+                      </ul> : null
+                    }
+                    <span className="qr-code">
+                      <QRCode value={`http://xsfxy.ninewe.com/?id=${user.project_id}&uid=${user.id}&type=${user.type}`} size={40} />
+                    </span>
+                  </div>
                 </div>
               </div>
               <div className="btn_group">
@@ -119,7 +124,7 @@ class Record extends Component {
         canvas.width = 1280;
         canvas.height = 720;
         var context = canvas.getContext("2d");
-        context.drawImage(video, 0,0 ,1280,720);
+        context.drawImage(video, 0, 0, 1280, 720);
 
         // recorder.stop();
         // stream.getTracks()[1].stop();
@@ -136,9 +141,11 @@ class Record extends Component {
   reshot = () => {
     this.setState(
       {
-        content: null
+        content: null,
+        videoMode: 0
       },
       () => {
+        const self = this
         navigator.mediaDevices
           .getUserMedia({ audio: false, video: { width: 1280, height: 720 } })
           .then(mediaStream => {
@@ -148,8 +155,11 @@ class Record extends Component {
                 ? mediaStream
                 : mediaStream.getTracks()[0];
             video.srcObject = mediaStream;
-            video.onloadedmetadata = function(e) {
+            video.onloadedmetadata = function (e) {
               video.play();
+              self.setState({
+                videoMode: 1
+              })
             };
             // recorder = new MediaRecorder(mediaStream, {
             //   mimeType: "video/webm"
@@ -200,15 +210,13 @@ class Record extends Component {
     });
   };
   print = () => {
-    // var iframe = document.getElementById("iframe");
-    // iframe.contentWindow.print();
     window.print();
   };
   render() {
     const backIcon = require("../../assets/back_icon_white.png");
     const content = this.state.content;
-    let id = sessionStorage.getItem("org");
-    const {uid, type} = this.props.match.params
+    let id = sessionStorage.getItem("org") || localStorage.getItem("org");
+    const { uid, type } = this.props.match.params
     return (
       <React.Fragment>
         <div className="record">
@@ -219,28 +227,30 @@ class Record extends Component {
             </Link>
           </div>
           {content ? null : (
-            <p
+            <div
               style={{
                 color: "#ddd",
                 fontSize: "48px",
-                position: "absolute",
-                left: "39%",
+                position: 'relative',
                 top: "250px",
-                zIndex: 1
+                zIndex: 1,
+                textAlign: 'center'
               }}
             >
-              请正对摄像头
-            </p>
+              {this.state.videoMode ? null : <p>即将进入拍照模式</p>}
+              <p>请正对摄像头</p>
+            </div>
           )}
 
           {content ? (
             content
           ) : (
-            <video src="" width="100%" height="720px" id="video" />
-          )}
+              <video src="" width="100%" height="720px" id="video" />
+            )}
           {content ? null : (
             <div className="shot_btn" onClick={this.shot}>
               <img src={require("../../assets/shot.png")} alt="" />
+              <p>点击拍摄</p>
             </div>
           )}
         </div>

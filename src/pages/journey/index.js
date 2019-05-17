@@ -10,7 +10,7 @@ const defaultPic = require("../../assets/default_new.png");
 class Journey extends Component {
   render() {
     return (
-      <div className="journey">
+      <div className="journey_j">
         <Route exact path="/:id/journey" component={Journey_Body} />
         <Route exact path="/:id/journey/history" component={Journey_History} />
         <Route exact path="/:id/journey/memory" component={Journey_Memory} />

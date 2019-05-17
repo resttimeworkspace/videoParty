@@ -9,6 +9,7 @@ var recorder = null;
 var chunks = [];
 var stream = null;
 var videoSource;
+
 class RecordDemo extends Component {
   state = {
     content: null,
@@ -21,11 +22,7 @@ class RecordDemo extends Component {
     progress: 0
   };
   componentWillUnmount = () => {
-    if (recorder) {
-    //   recorder.stop();
-      stream.getTracks()[1].stop();
-      stream.getTracks()[0].stop();
-    }
+    stream && stream.stop();
   };
   componentDidMount = () => {
     this.getQiNiuToken();
@@ -33,23 +30,26 @@ class RecordDemo extends Component {
       .getUserMedia({ audio: true, video: { width: 1280, height: 720 } })
       .then(mediaStream => {
         var video = document.querySelector("video");
-        stream = mediaStream;
+        var option = {
+          mimeType: 'video/webm'
+        }
+        stream =
+          typeof mediaStream.stop === "function"
+            ? mediaStream
+            : mediaStream.getTracks()[0];
         video.srcObject = mediaStream;
-        video.onloadedmetadata = function(e) {
+        video.onloadedmetadata = function (e) {
           video.play();
         };
-        recorder = new MediaRecorder(mediaStream, { mimeType: "video/webm" });
-        console.log(recorder);
-        recorder.ondataavailable = function(e) {
-          console.log(chunks);
+        recorder = new MediaRecorder(mediaStream, option);
+        recorder.ondataavailable = function (e) {
           chunks.push(e.data);
         };
-        recorder.onstop = function(e) {
-          videoSource = new Blob(chunks, { type: "video/webm" });
+        recorder.onstop = function (e) {
+          videoSource = new Blob(chunks, { type: "video/mp4" });
           // videoSource = URL.createObjectURL(blob);
-          console.log(videoSource);
         };
-        recorder.onstart = function(e) {
+        recorder.onstart = function (e) {
           chunks = [];
           console.log(chunks);
           console.log("recorder start");
@@ -62,24 +62,34 @@ class RecordDemo extends Component {
     chunks = [];
     this.setState({
       content: (
-        <div className="shot_btn">
-          <img
-            onClick={this.retry}
-            src={require("../../assets/record_retry.png")}
-            alt=""
-          />
-          {videoState === "stop" || videoState === "recording" ? (
+        <div className="shot_btn" style={{ flexDirection: "row" }}>
+          <div>
+            <p style={{ textAlign: "center", fontSize: 30, marginBottom: 0 }}>取消</p>
             <img
-              onClick={this.pause}
-              src={require("../../assets/record_pause.png")}
+              onClick={this.retry}
+              src={require("../../assets/record_retry.png")}
               alt=""
             />
+          </div>
+
+          {videoState === "stop" || videoState === "recording" ? (
+            <div>
+              <p style={{ textAlign: "center", fontSize: 30, marginBottom: 0 }}>暂停</p>
+              <img
+                onClick={this.pause}
+                src={require("../../assets/record_pause.png")}
+                alt=""
+              />
+            </div>
           ) : null}
-          <img
-            onClick={this.upload}
-            src={require("../../assets/record_save.png")}
-            alt=""
-          />
+          <div>
+            <p style={{ textAlign: "center", fontSize: 30, marginBottom: 0 }}>确认</p>
+            <img
+              onClick={this.upload}
+              src={require("../../assets/record_save.png")}
+              alt=""
+            />
+          </div>
         </div>
       ),
       videoState: "recording"
@@ -100,7 +110,7 @@ class RecordDemo extends Component {
       let self = this;
       let { id, uid, type } = this.props.match.params;
       let typeName = type == 1 ? 'dangyuan' : 'team'
-      const url = `org/${id}/${typeName}/${uid}/video.webm`
+      const url = `org/${id}/${typeName}/${uid}/video.mp4`
       var observable = qiniu.upload(
         videoSource,
         url,
@@ -146,46 +156,68 @@ class RecordDemo extends Component {
     this.setState({
       videoState: "pause",
       content: (
-        <div className="shot_btn">
-          <img
-            onClick={this.retry}
-            src={require("../../assets/record_retry.png")}
-            alt=""
-          />
-          <img
-            onClick={this.goon}
-            src={require("../../assets/record_start.png")}
-            alt=""
-          />
-          <img
-            onClick={this.upload}
-            src={require("../../assets/record_save.png")}
-            alt=""
-          />
+        <div className="shot_btn" style={{ flexDirection: "row" }}>
+          <div>
+            <p style={{ textAlign: "center", fontSize: 30, marginBottom: 0 }}>取消</p>
+
+            <img
+              onClick={this.retry}
+              src={require("../../assets/record_retry.png")}
+              alt=""
+            />
+          </div>
+          <div>
+            <p style={{ textAlign: "center", fontSize: 30, marginBottom: 0 }}>继续拍摄</p>
+
+            <img
+              onClick={this.goon}
+              src={require("../../assets/record_start.png")}
+              alt=""
+            />
+          </div>
+          <div>
+            <p style={{ textAlign: "center", fontSize: 30, marginBottom: 0 }}>确认</p>
+            <img
+              onClick={this.upload}
+              src={require("../../assets/record_save.png")}
+              alt=""
+            />
+          </div>
         </div>
       )
     });
   };
   goon = () => {
+    console.log('goon');
     this.setState({
       videoState: "recording",
       content: (
-        <div className="shot_btn">
-          <img
-            onClick={this.retry}
-            src={require("../../assets/record_retry.png")}
-            alt=""
-          />
-          <img
-            onClick={this.pause}
-            src={require("../../assets/record_pause.png")}
-            alt=""
-          />
-          <img
-            onClick={this.upload}
-            src={require("../../assets/record_save.png")}
-            alt=""
-          />
+        <div className="shot_btn" style={{ flexDirection: "row" }}>
+          <div>
+            <p style={{ textAlign: "center", fontSize: 30, marginBottom: 0 }}>取消</p>
+
+            <img
+              onClick={this.retry}
+              src={require("../../assets/record_retry.png")}
+              alt=""
+            />
+          </div>
+          <div>
+            <p style={{ textAlign: "center", fontSize: 30, marginBottom: 0 }}>继续拍摄</p>
+            <img
+              onClick={this.pause}
+              src={require("../../assets/record_pause.png")}
+              alt=""
+            />
+          </div>
+          <div>
+            <p style={{ textAlign: "center", fontSize: 30, marginBottom: 0 }}>确认</p>
+            <img
+              onClick={this.upload}
+              src={require("../../assets/record_save.png")}
+              alt=""
+            />
+          </div>
         </div>
       )
     });
@@ -212,34 +244,42 @@ class RecordDemo extends Component {
               <img src={backIcon} alt="" />
             </Link>
           </div>
-          {videoState !== "stop" ? null : (
-            <p
-              style={{
-                color: "#ddd",
-                fontSize: "48px",
-                position: "absolute",
-                left: "39%",
-                top: "250px",
-                zIndex: 1
-              }}
-            >
-              请正对摄像头
+          {videoState !== "stop" ? <div style={{
+            textAlign: 'center',
+            position: 'relative',
+            top: '20%',
+            color: ' #fff',
+            zIndex: '99',
+            fontSize: '28px',
+            fontWeight: 'bolder'
+          }}>现在是视频录制模式</div> : (
+              <p
+                style={{
+                  color: "#ddd",
+                  fontSize: "48px",
+                  position: "absolute",
+                  left: "39%",
+                  top: "250px",
+                  zIndex: 1
+                }}
+              >
+                请正对摄像头
             </p>
-          )}
-          <video src="" width="100%" height="720px" id="video" muted />
+            )}
+          <video src="" width="100%" height='750px' style={{ objectFit: 'fill' }} id="video" muted />
           {videoState === "pause" || videoState === "recording" ? (
             content
           ) : (
-            <div className="shot_btn" onClick={this.record}>
-              <img src={require("../../assets/record_start.png")} alt="" />
-            </div>
-          )}
+              <div className="shot_btn" onClick={this.record}>
+                <img src={require("../../assets/record_start.png")} alt="" />
+              </div>
+            )}
         </div>
         <Modal
           visible={this.state.uploadProgress}
           footer={null}
           maskClosable={false}
-          style={{textAlign:'center'}}
+          style={{ textAlign: 'center' }}
         >
           <Progress type="circle" percent={Number(this.state.progress)} />
         </Modal>

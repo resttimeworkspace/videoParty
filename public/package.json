@@ -24,7 +24,7 @@
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
-    "pac": "npm run build && npm run package",
+    "estart": "yarn build && yarn package",
     "eject": "react-app-rewired eject",
     "package": "electron-packager ./build 中流砥柱 --platform=win32 --arch=ia32 --icon=./build/icon.ico --out=./output --asar --app-version=0.0.1 --overwrite"
   },

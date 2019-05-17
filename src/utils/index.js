@@ -5,3 +5,5 @@ const request = axios.create({
 });
 
 export default request;
+
+export const version = 0; // 1 有链接的版本， 0 没有链接

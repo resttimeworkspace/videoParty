@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Table,Button } from "antd";
+import { Table, Button } from "antd";
 import Header from "../../components/Header";
 import request from "../../utils";
 import "./index.less";
@@ -10,7 +10,7 @@ class RecordUserList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        list:[]
+      list: []
     };
   }
   columns = [
@@ -23,7 +23,7 @@ class RecordUserList extends Component {
       title: "性别",
       dataIndex: "sex",
       key: "sex",
-      render: sex => sex ? '男' :'女'
+      render: sex => sex ? '男' : '女'
     },
     {
       title: "党支部",
@@ -63,34 +63,35 @@ class RecordUserList extends Component {
   ];
   record = user => () => {
     this.props.history.push(`/${id}/confirm/${user.id}/${type}`);
-    sessionStorage.setItem('user',JSON.stringify(user))
+    sessionStorage.setItem('user', JSON.stringify(user))
+    localStorage.setItem('user', JSON.stringify(user))
   };
   componentDidMount = () => {
-    id = sessionStorage.getItem("org");
-    orgName = sessionStorage.getItem("orgName");
+    id = this.props.match.params.id || sessionStorage.getItem("org") || localStorage.getItem("org");
+    orgName = sessionStorage.getItem("orgName") || localStorage.getItem("orgName");
     type = +this.props.match.params.type;
 
-    const url = `/api/org/${sessionStorage.getItem("org")}/${type ? 'dangyuan': 'team'}`;
+    const url = `/api/org/${id}/${type ? 'dangyuan' : 'team'}`;
     request
       .get(url)
       .then(res => {
-          this.setState({
-            list:res.data.data
-          })
+        this.setState({
+          list: res.data.data
+        })
       });
-   
+
   };
 
   render() {
     const type = +this.props.match.params.type;
-    const typeName =  type? '党员信息': '党组织信息';
+    const typeName = type ? '党员信息' : '党组织信息';
     return (
       <div className='recordUserList'>
         <Header title={typeName} back={`/${id}/initialHeart`} />
-        <div style={{maxWidth:1000,margin:'30px auto 0 auto',padding:10, backgroundColor:'#fff'}}>
-        <Table columns={type ?this.columns: this.columnsOrg} dataSource={this.state.list}
-            pagination={{defaultPageSize:8}}
-         rowKey='id' />
+        <div style={{ maxWidth: 1000, margin: '30px auto 0 auto', padding: 10, backgroundColor: '#fff' }}>
+          <Table columns={type ? this.columns : this.columnsOrg} dataSource={this.state.list}
+            pagination={{ defaultPageSize: 8 }}
+            rowKey='id' />
         </div>
       </div>
     );

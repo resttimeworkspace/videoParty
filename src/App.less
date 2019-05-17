@@ -43,15 +43,21 @@
   top: 86px;
   display: flex;
   justify-content: space-around;
+  height: 400px;
 }
 a{
   text-decoration:none;
+  b{
+    color: #333 !important;
+    font-size: 18px;
+  }
 }
 .body-item{
   text-align: center;
   background: linear-gradient(to bottom, #F74043 0%,#DC2C2F 100%);
-  position: relative;
-  top: 86px;
+  // position: relative;
+  // top: 86px;
+  margin: 30px 0 10px 0;
   width: 270px;
   height: 200px;
   display: flex;
@@ -59,6 +65,12 @@ a{
   align-items: center;
   justify-content: center;
   border-radius: 10px;
+  a{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    
+  }
   p{
     margin:8px auto;
     font-size:38px;
@@ -66,6 +78,7 @@ a{
     font-weight:bold;
     color:rgba(255,255,255,1);
   }
+  
   img{
     widows: 90px;
     height: 98px;

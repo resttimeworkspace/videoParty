@@ -24,6 +24,7 @@
                 width: 100%;
                 padding: 10px;
                 background-color: #fff;
+                min-height: 94px;
                 h3 {
                     margin: 0;
                     font-size: 20px;
@@ -47,4 +48,111 @@
              bottom: -18px;
         }
     }
+    .preview{
+        padding: 15px;
+        display: none;
+    }
+    .preview-image{
+        width: 300pt;
+        height: 150pt;
+        overflow: hidden;
+        position: relative;
+        text-align: center;
+        > img{
+            width: 100%;
+        }
+        .qr-code{
+            display: none;
+            padding: 2px;
+            position: absolute;
+            bottom: -5px;
+            right: 0;
+            background-color: #fff;
+        }
+    }
+    .preview-info{
+        display: none; // display: flex;
+        margin-top: 5px;
+        width: 100%;
+        .preview-title{
+            flex: 1;
+            font-size: 10pt;
+            font-weight: 800;
+            color: #DD2D30;
+            display: flex;
+            align-items: center;
+            >img{
+                margin-right: 8px;
+            }
+        }
+        
+        .developer{
+            list-style: none;
+            margin: 0 10px;
+            padding: 0;
+            font-size: 8pt;
+            font-weight: 600;
+            color: #666666;
+        }
+    }
+}
+@media print{
+    #root{width: 100%;height: auto;}
+    .header{
+        display: none;
+    }
+    .users{
+        .preview{
+            width: 400pt !important;
+            display: block;
+
+        }
+        .users_header{
+            display: none;
+        }
+        .users_body{
+            display: none;
+        }
+        .preview-image{
+            width: 100%;
+            height: 190pt;
+            .qr-code{
+                display: block;
+            }
+        }
+        .preview-info{
+            display: flex;
+            // position: absolute;
+            // margin-top: -45px;
+            // bottom: 45px;
+            padding: 0;
+            width: 100% !important ;
+            // font-size: 3pt;
+            // .preview-title{
+            //     font-size: 3pt;
+            // }
+            // .developer{
+            //     font-size: 80%;
+            // }
+        } 
+
+        .photo_modal{
+            display: block;
+            position: static;
+            width: 100%;
+            height: auto;
+            .header{
+                display: none;
+            }
+            .modal_body{
+                display: block;
+                width: 100%;
+                height: auto;
+                .btn_group{
+                    display: none;
+                }
+            }
+        }
+    }
+    
 }

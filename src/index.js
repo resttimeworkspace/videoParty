@@ -12,7 +12,6 @@ import ChooseORG from "./pages/chooseORG";
 // import RecordUserList from "./pages/recordUserList";
 import Finish from "./pages/finish";
 import InitialHeart from './pages/InitialHeart'
-let hasOrg = sessionStorage.getItem("org");
 ReactDOM.render(
   <Router>
     <Switch>
